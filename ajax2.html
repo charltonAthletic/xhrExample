@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><b>Ajax 2 - External API</b></title>
+
+    <style>
+
+*{
+    margin: 0;
+    padding: 0;
+  }
+
+    h1 {
+        color: blue;
+        text-decoration: underline;
+    }
+
+    .user{
+        display: flex;
+        background:bisque;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .user ul{
+        list-style: none;
+    }
+
+    </style>
+</head>
+<body>
+    <h1>Football league</h1>
+    <br>
+    <button id="button">Click to see the football leagues we offer:</button>
+    <br><br>
+    <div id="users"></div>
+
+
+    <script>
+        document.getElementById('button').addEventListener('click', loadUsers);
+
+        function loadUsers(){
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://apifootball.com/api/?action=get_leagues&country_id=174&APIkey=71a714d9572be99358ad283b5b205d8552eb6edb6db4e2c9998e80c3ee97f2ad', true);
+            
+            xhr.onload = function(){
+                if(this.status == 200) {
+                    console.log(this.responseText);
+                    var users = JSON.parse(this.responseText);
+                    var output = '';
+
+                    for (var i in users){
+
+                        /* API request:
+                        https://apifootball.com/api/?action=get_leagues&country_id=174&APIkey=71a714d9572be99358ad283b5b205d8552eb6edb6db4e2c9998e80c3ee97f2ad
+                        */
+
+                        output +=
+                        '<div class="user">' + 
+                        '<ul>' +
+                        '<li><b>country</b>: '+users[i].country_name+'</li>'+
+                        '<li><b>league name</b>: '+users[i].league_name+'</li>' +
+                        '</ul>' +
+                        '</div>';
+
+                        /*
+                        output += 
+                        '<div class="user">' + 
+                        '<img src="'+users[i].avatar_url+'" width="70" height="70">' + 
+                        '<ul>' +
+                        '<li><b>Id</b>: '+users[i].id+'</li>'+
+                        '<li><b>Login</b>: '+users[i].login+'</li>' +
+                        '</ul>' +
+                        '</div>';  */                            
+                    }
+                    document.getElementById('users').innerHTML = output;
+                }
+            }
+            xhr.send();
+        }
+    
+    </script>
+
+</body>
+</html>
